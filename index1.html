@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QCM Bacterio Virology Quiz</title>
+  <style>
+    :root {
+      --bg: #eef3fb;
+      --panel: rgba(255,255,255,0.82);
+      --panel-solid: #ffffff;
+      --text: #1e2a39;
+      --muted: #708198;
+      --line: #dce6f4;
+      --primary: #2f6df6;
+      --primary-2: #5b8cff;
+      --accent: #12b6a6;
+      --warn: #ffb84d;
+      --danger: #ef5350;
+      --shadow: 0 20px 45px rgba(34,60,105,.10);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: Inter, Arial, Helvetica, sans-serif; background:
+      radial-gradient(circle at top left, #f9fbff 0%, #eef3fb 45%, #e8effb 100%); color: var(--text); }
+    button, input { font: inherit; }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 300px minmax(0,1fr) 290px;
+      gap: 20px;
+      padding: 20px;
+    }
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+    .sidebar {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: sticky;
+      top: 20px;
+      height: calc(100vh - 40px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-badge {
+      width: 52px; height: 52px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; display: grid; place-items: center;
+      font-weight: 800; font-size: 18px;
+      box-shadow: 0 12px 24px rgba(47,109,246,.25);
+    }
+    .brand h1 { font-size: 20px; margin: 0 0 4px; }
+    .brand p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 10px; }
+    .mode-switch {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      padding: 8px; background: #edf3ff; border-radius: 18px;
+    }
+    .mode-switch button {
+      border: 0; border-radius: 14px; padding: 12px 14px; cursor: pointer;
+      background: transparent; color: var(--muted); font-weight: 700;
+    }
+    .mode-switch button.active { background: #fff; color: var(--primary); box-shadow: 0 8px 20px rgba(59,98,176,.12); }
+    .part-list { display: grid; gap: 10px; overflow: auto; padding-right: 4px; }
+    .part-btn {
+      width: 100%; border: 1px solid var(--line); background: #fff; border-radius: 16px;
+      padding: 14px; text-align: left; cursor: pointer; transition: .18s ease;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .part-btn:hover { transform: translateY(-1px); border-color: #bfd2ff; }
+    .part-btn.active { background: linear-gradient(135deg, #2f6df6, #5b8cff); color: #fff; border-color: transparent; }
+    .part-btn small { display: block; opacity: .82; font-size: 12px; margin-top: 4px; }
+    .progress-card {
+      background: linear-gradient(135deg, #1f58cf, #4685ff);
+      color: #fff; border-radius: 22px; padding: 18px;
+    }
+    .progress-card h3 { margin: 0 0 8px; font-size: 16px; }
+    .progress-track { height: 10px; border-radius: 999px; background: rgba(255,255,255,.22); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #fff, #c4ffd9); border-radius: inherit; }
+    .progress-meta { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-top: 10px; opacity: .95; }
+
+    .main {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-width: 0;
+    }
+    .topbar {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .chip {
+      background: #fff; border: 1px solid var(--line); border-radius: 999px;
+      padding: 10px 14px; color: var(--muted); font-weight: 700; font-size: 13px;
+    }
+    .search {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 10px;
+      background: #fff; border: 1px solid var(--line); border-radius: 999px;
+      padding: 0 14px; min-width: min(360px, 100%);
+      flex: 1 1 280px;
+    }
+    .search input { border: 0; outline: none; background: transparent; width: 100%; padding: 12px 0; color: var(--text); }
+    .question-card {
+      background: var(--panel-solid);
+      border-radius: 28px;
+      padding: 24px;
+      border: 1px solid #eef3ff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 16px 40px rgba(47,109,246,.08);
+    }
+    .question-head {
+      display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 18px;
+    }
+    .question-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #edf3ff; color: var(--primary); border-radius: 999px;
+      padding: 10px 14px; font-weight: 800; font-size: 13px; letter-spacing: .02em;
+    }
+    .question-text {
+      font-size: 24px; line-height: 1.5; font-weight: 700; margin: 0;
+      letter-spacing: -.02em;
+    }
+    .question-note {
+      margin-top: 12px; color: var(--muted); line-height: 1.55; font-size: 14px;
+      padding: 12px 14px; border-radius: 16px; background: #f7faff; border: 1px dashed #d7e4ff;
+    }
+    .options {
+      display: grid; gap: 14px; margin-top: 22px;
+    }
+    .option {
+      border: 1px solid var(--line); border-radius: 20px; background: #fff;
+      padding: 18px; cursor: pointer; display: flex; gap: 16px; align-items: flex-start;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      position: relative;
+    }
+    .option:hover { transform: translateY(-1px); border-color: #b7ccff; box-shadow: 0 12px 28px rgba(47,109,246,.08); }
+    .option.selected {
+      border-color: var(--primary); background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
+      box-shadow: 0 14px 30px rgba(47,109,246,.12);
+    }
+    .option-letter {
+      min-width: 44px; width: 44px; height: 44px; border-radius: 14px;
+      background: #edf3ff; color: var(--primary); display: grid; place-items: center;
+      font-weight: 800; font-size: 16px;
+    }
+    .option.selected .option-letter { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: white; }
+    .option-text { font-size: 18px; line-height: 1.55; padding-top: 4px; }
+    .nav-row {
+      display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .btn {
+      border: 0; border-radius: 18px; padding: 14px 18px; cursor: pointer;
+      font-weight: 800; letter-spacing: .01em;
+    }
+    .btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; box-shadow: 0 16px 30px rgba(47,109,246,.24); }
+    .btn.secondary { background: #fff; color: var(--text); border: 1px solid var(--line); }
+    .btn.ghost { background: #eef4ff; color: var(--primary); }
+
+    .palette {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 20px;
+      height: calc(100vh - 40px);
+    }
+    .palette-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .stat {
+      background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 14px;
+    }
+    .stat strong { display: block; font-size: 22px; margin-bottom: 4px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .question-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+      overflow: auto; padding-right: 2px;
+    }
+    .qnum {
+      border: 1px solid var(--line); background: #fff; border-radius: 14px; height: 46px;
+      display: grid; place-items: center; cursor: pointer; font-weight: 800; color: var(--muted);
+      transition: .15s ease;
+    }
+    .qnum.active { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: white; border-color: transparent; }
+    .qnum.answered:not(.active) { background: #e8fff7; color: #0d8d7f; border-color: #baf0df; }
+    .legend {
+      display: grid; gap: 8px; font-size: 13px; color: var(--muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 10px; }
+    .dot { width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 1px solid var(--line); }
+    .dot.active { background: var(--primary); border-color: var(--primary); }
+    .dot.done { background: #27c7a5; border-color: #27c7a5; }
+    .footer-note {
+      color: var(--muted); font-size: 12px; line-height: 1.5;
+      background: #f8fbff; border: 1px dashed var(--line); padding: 12px 14px; border-radius: 16px;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 280px minmax(0,1fr); }
+      .palette { grid-column: 1 / -1; position: static; height: auto; }
+    }
+    @media (max-width: 840px) {
+      .app { grid-template-columns: 1fr; padding: 14px; }
+      .sidebar, .palette { position: static; height: auto; }
+      .question-text { font-size: 21px; }
+      .option-text { font-size: 16px; }
+      .search { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel sidebar">
+      <div class="brand">
+        <div class="brand-badge">QCM</div>
+        <div>
+          <h1>Bacterio Virology Y3-S1</h1>
+          <p>203 MCQs from the uploaded PDF, split into 7 parts, in one browser-ready quiz file.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Mode</div>
+        <div class="mode-switch">
+          <button id="practiceModeBtn" class="active">Practice</button>
+          <button id="examModeBtn">Exam</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Parts</div>
+        <div class="part-list" id="partList"></div>
+      </div>
+
+      <div class="progress-card">
+        <h3>Overall progress</h3>
+        <div class="progress-track"><div class="progress-fill" id="overallFill"></div></div>
+        <div class="progress-meta">
+          <span id="overallAnswered">0 / 203 answered</span>
+          <span id="overallPercent">0%</span>
+        </div>
+      </div>
+
+      <button class="btn secondary" id="resetPartBtn">Reset current part</button>
+      <button class="btn ghost" id="resetAllBtn">Reset all answers</button>
+    </aside>
+
+    <main class="panel main">
+      <div class="topbar">
+        <div class="chip" id="currentPartChip">Part 1</div>
+        <div class="chip" id="currentRangeChip">Q1–30</div>
+        <div class="chip" id="currentIndexChip">Question 1 of 30</div>
+        <label class="search">
+          <span>🔎</span>
+          <input id="searchInput" type="text" placeholder="Search by keyword or jump to number..." />
+        </label>
+      </div>
+
+      <section class="question-card">
+        <div class="question-head">
+          <div>
+            <div class="question-label" id="questionBadge">Question 1</div>
+            <h2 class="question-text" id="questionText"></h2>
+          </div>
+        </div>
+
+        <div class="question-note" id="modeNote"></div>
+
+        <div class="options" id="optionsWrap"></div>
+
+        <div class="nav-row">
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn secondary" id="prevBtn">← Previous</button>
+            <button class="btn primary" id="nextBtn">Next →</button>
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn secondary" id="clearBtn">Clear choice</button>
+            <button class="btn ghost" id="jumpUnansweredBtn">Next unanswered</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="panel palette">
+      <div class="section-title">Question palette</div>
+
+      <div class="palette-stats">
+        <div class="stat">
+          <strong id="partAnswered">0</strong>
+          <span>Answered in this part</span>
+        </div>
+        <div class="stat">
+          <strong id="partRemaining">0</strong>
+          <span>Remaining in this part</span>
+        </div>
+      </div>
+
+      <div class="question-grid" id="questionGrid"></div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="dot active"></span> Current question</div>
+        <div class="legend-item"><span class="dot done"></span> Answered</div>
+        <div class="legend-item"><span class="dot"></span> Not answered</div>
+      </div>
+
+      <div class="footer-note">
+        This app preserves your choices in your browser using local storage. The PDF provides the questions and options, but no answer key was included, so this file tracks selections and completion rather than scoring correctness.
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+  {
+    "number": 1,
+    "question": "Which of the following is not a genus of Enterobactericeae?",
+    "options": [
+      "Shigella spp",
+      "Salmonella spp",
+      "Serratia spp",
+      "Staphylococcus spp"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 2,
+    "question": "All these species are in familly Enterobactericeae, except:",
+    "options": [
+      "Citrobacter",
+      "Enterobacter",
+      "Enterococcus",
+      "Escherichia"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 3,
+    "question": "Which of the following bacteria is a genus of Enterobactericeae?",
+    "options": [
+      "Klebsiella",
+      "Enterococcus",
+      "Neisseria",
+      "Mycoplasma"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 4,
+    "question": "True about Enterobactericeae is all, except:",
+    "options": [
+      "Normal or pathological bacteria of digestive tract",
+      "Some group proliferate in environmental",
+      "Some species are opportunistic pathogens",
+      "Some are commensal on skin"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 5,
+    "question": "Which of the following bacteria is not a most common bacterial pathogen causing diarrhea?",
+    "options": [
+      "Shigella spp",
+      "Salmonella spp",
+      "Staphylococcus aureus",
+      "Campylobacter"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 6,
+    "question": "Which of the following bacteria is rarely associated with Urinary Tract Infection?",
+    "options": [
+      "E.coli",
+      "Enterobacter spp",
+      "Proteus spp",
+      "Shigella spp"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 7,
+    "question": "Which of the following Gram negative rod is not a blood borne bacterial pathogen?",
+    "options": [
+      "Shigella spp",
+      "Escherichia Coli",
+      "Klebsiella pneumoniae",
+      "Pseudomonas aeruginosa"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 8,
+    "question": "Stool Culture is primarily recommended when the complaint is",
+    "options": [
+      "Bloody diarrhea(dysentery, enterocolitis)",
+      "Watery diarrhea",
+      "For both bloody and watery diarrhea",
+      "an indication of anaerobic infection"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 9,
+    "question": "Which of the following are reservoirs for humans infection?",
+    "options": [
+      "Food and water",
+      "humans",
+      "animals",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 10,
+    "question": "Enterobactericeae has respirotory type:",
+    "options": [
+      "Aerobic strict",
+      "Aeroanaerobic facultatif",
+      "Anaerobic strict",
+      "Microaerophilic"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 11,
+    "question": "The vast majority of Enterobactericeae have Flagellar:",
+    "options": [
+      "Peritrichous",
+      "monotrichous",
+      "amphitrichous",
+      "lophotrichous"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 12,
+    "question": "Which of the following bacteria is immotile(no flagellar)?",
+    "options": [
+      "Klebsiella",
+      "Salmonella typhy",
+      "Vibrio cholerae",
+      "Escherichia"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 13,
+    "question": "The optimum growth temperature of Enterobactericea is:",
+    "options": [
+      "25 oC",
+      "30 oC",
+      "37 oC",
+      "40 oC"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 14,
+    "question": "Enterobactericeae growth on ordinary media after:",
+    "options": [
+      "18-24 hours",
+      "37 hours",
+      "48 hours",
+      "72 hours"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 15,
+    "question": "Which of the following is not a general caracteristic of Enterobactericeae?",
+    "options": [
+      "Gram negative bacilli",
+      "Oxydase positive",
+      "fermenter glucose",
+      "Aero-anaerobic facultative"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 16,
+    "question": "All are true about species of Salmonella, except:",
+    "options": [
+      "Salmonella typhi",
+      "Salmonella enteritidis",
+      "Salmonella cholerae-suis",
+      "Salmonella dysenteriae"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 17,
+    "question": "Not true of Salmonella is that:",
+    "options": [
+      "It is included in the family Enterobactericeae",
+      "Oxydase negative",
+      "Catalase positive",
+      "Strict anaerobic"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 18,
+    "question": "Major antigens possess by Salmonella:",
+    "options": [
+      "Antigen O",
+      "Antigen H",
+      "Antigen Vi",
+      "All of the above"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 19,
+    "question": "The caracteristic of Salmonella:",
+    "options": [
+      "Motile",
+      "Fermenting lactose",
+      "Produce H2S",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 20,
+    "question": "True about the caracteristic of Shigella, is all, except:",
+    "options": [
+      "Gram negative bacilli",
+      "Non motile",
+      "fermenter lactose",
+      "Fermenter glucose with production of acid but not gas"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 21,
+    "question": "Which of the following is not a symptom cause by Shigella?",
+    "options": [
+      "Meningitis",
+      "abdominal pain",
+      "diarrhea",
+      "Nausea and vomiting"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 22,
+    "question": "Which of the following is not a type of specimen for Shigella?",
+    "options": [
+      "anal swab",
+      "urine",
+      "stool",
+      "rectal swab"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 23,
+    "question": "True about the important part of specimen stool that we should steak or collect for culture Shigella, is all, except:",
+    "options": [
+      "Blood",
+      "mucus",
+      "food excremen",
+      "pus"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 24,
+    "question": "Which of the following is a stool transport medium?",
+    "options": [
+      "Cary-blair",
+      "Mueller hinton",
+      "Blood agar",
+      "chorcolate agar"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 25,
+    "question": "In stool culture, the hight selective media for Shigella spp is:",
+    "options": [
+      "MacConkey agar",
+      "SS agar",
+      "Xylose lysine desoxycholate agar",
+      "Eosin methylene blue"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 26,
+    "question": "In stool culture, the moderately selective media for Shigella spp is:",
+    "options": [
+      "MacConkey agar",
+      "SS agar",
+      "Xylose lysine desoxycholate agar",
+      "Eosin methylene blue"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 27,
+    "question": "In stool culture, the low selective media for Shigella spp is:",
+    "options": [
+      "MacConkey agar",
+      "SS agar",
+      "Xylose lysine desoxycholate agar",
+      "Hektoen enteric agar"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 28,
+    "question": "In stool culture, Which of the following is not a selective media for Shigella spp?",
+    "options": [
+      "MacConkey agar",
+      "SS agar",
+      "Xylose lysine desoxycholate agar",
+      "Chapman agar"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 29,
+    "question": "Citrobacter that we frequently isolated:",
+    "options": [
+      "Citrobacter amalonaticus",
+      "Citrobacter koseri",
+      "Citrobacter freundii",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 30,
+    "question": "Pathogenecity and habitat of Citrobacter:",
+    "options": [
+      "Saprophytic bacteria",
+      "nosocomial infection",
+      "opportunistic pathogen and urinary tract infection",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 1
+  },
+  {
+    "number": 31,
+    "question": "which of the following  is not caracteristic of Klebsiella?",
+    "options": [
+      "Gram positive bacilli",
+      "Capsulated",
+      "Colonies mucus",
+      "Immotile"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 32,
+    "question": "Rhinoscleroma is frequently caused by which one of the following bacteria?",
+    "options": [
+      "Klebsiella pneumoniae",
+      "Klebsiella oxytoca",
+      "Klebsiella rhinoscleromatis",
+      "Klebsiella ozaenae"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 33,
+    "question": "Pathogenecity and habitat of Enterobacter:",
+    "options": [
+      "Commensal gut",
+      "Urinary tract infection",
+      "Bacteremia",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 34,
+    "question": "All are true about Proteus, except:",
+    "options": [
+      "Coloni invasion of Media",
+      "Grampositive bacilli",
+      "Resistance to colistine",
+      "Peritrichous flagella"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 35,
+    "question": "Which of the following is not caracteristic of Yersinia?",
+    "options": [
+      "Gram negative bacilli",
+      "Capsulated",
+      "not sporulated",
+      "None motile at 37oC"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 36,
+    "question": "Which of the following is caracteristic of Yersinia?",
+    "options": [
+      "some time coccobacilli",
+      "Capsulated",
+      "Sporulated",
+      "motile at 37oC"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 37,
+    "question": "Yersinia are attached to Enterobacteriaceae with:",
+    "options": [
+      "Oxydase negative",
+      "Catalase positive",
+      "Glucose fermenter",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 38,
+    "question": "Yersinia are generated with three main pathogens:",
+    "options": [
+      "Yersinia pestis",
+      "Yersinia enterocolitica",
+      "Yersinia pseudotuberculosis",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 39,
+    "question": "Yersinia pestisare responsible for:",
+    "options": [
+      "enterocolitis",
+      "Plague",
+      "adenolymphite mesenteric",
+      "septicemic faorm"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 40,
+    "question": "Campylobacter jejuni resist to:",
+    "options": [
+      "desiccation",
+      "freezing",
+      "cold 0-10oC",
+      "salt"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 41,
+    "question": "Campylobacter jejuni very sentitive to:",
+    "options": [
+      "desiccation",
+      "freezing",
+      "salt",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 42,
+    "question": "Yersinia is naturally resistant to:",
+    "options": [
+      "streptogramineB",
+      "erythromycin",
+      "ofloxacin",
+      "ciprofloxacin"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 43,
+    "question": "Which of the following is not a caracteristic of Vibrio?",
+    "options": [
+      "Gram negative bacilli in curve",
+      "Immotile",
+      "Oxydase positive",
+      "aero-anaerobic"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 44,
+    "question": "Which of the following is a specific media for Vibrio?",
+    "options": [
+      "Chapman",
+      "Sabouraud chloramphenicol",
+      "TCBS",
+      "Skirrow"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 45,
+    "question": "Vibriois very motile with ciliature:",
+    "options": [
+      "monotrichous",
+      "amphitrichous",
+      "lophotrichous",
+      "Peritrichous"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 46,
+    "question": "Which of the following is not a species in family Pseudomonasceae?",
+    "options": [
+      "Pseudomonas",
+      "Citrobacter",
+      "Acinetobacter",
+      "Burkholderia"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 47,
+    "question": "True about common caracteristic of Pseudomonasceae, is all, except:",
+    "options": [
+      "Gram negative bacilli",
+      "aerobic strict",
+      "fermenter glucose",
+      "Oxydase positive"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 48,
+    "question": "Which of the following is a common caracteristic of Pseudomonasceae?",
+    "options": [
+      "Gram positive bacilli",
+      "aero-anaerobic falcultative",
+      "fermenter glucose",
+      "none of these"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 49,
+    "question": "Optimum temperature for culture Pseudomonasceae is:",
+    "options": [
+      "2-8oC",
+      "25oC",
+      "37oC",
+      "41oC"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 50,
+    "question": "Pseudomonasceaeresponsible for opportunistic pathogen in immunocompromised patients:",
+    "options": [
+      "Cancer",
+      "Burns",
+      "Dialysis",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 51,
+    "question": "True about common caracterisric of Haemophilus, is all, except:",
+    "options": [
+      "Gram negative coccobacilli",
+      "Capsulated",
+      "Incubated in 10% CO2",
+      "Easy grow in usual media"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 52,
+    "question": "Which of the following media that contain both factor X and V that is required by Haemophilus?",
+    "options": [
+      "Blood agar",
+      "Chocolate agar",
+      "Mueller Hinton",
+      "Trypticase soy agar"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 53,
+    "question": "Haemophilus influenzaresponsible for infection:",
+    "options": [
+      "Meningitis",
+      "diarrhea",
+      "Urinary trat infection",
+      "digestive infection"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 54,
+    "question": "The most common cause of meningitis in children aged 6months-2years is H.influenza serotype:",
+    "options": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 55,
+    "question": "Transmission of Haemophilus influenzais from",
+    "options": [
+      "Human to Human",
+      "Animal to animal",
+      "Human to animal",
+      "insect to human"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 56,
+    "question": "Which of the following is a specie in family Pseudomonasceae?",
+    "options": [
+      "Campylobacter",
+      "Citrobacter",
+      "Acinetobacter",
+      "Enterobacter"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 57,
+    "question": "Habitat of Pseudomonasceae:",
+    "options": [
+      "Soil",
+      "Water",
+      "Plant dust",
+      "all of the above"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 58,
+    "question": "Pseudomonas aeruginosa is motile with ciliature:",
+    "options": [
+      "monotrichous",
+      "amphitrichous",
+      "lophotrichous",
+      "Peritrichous"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 59,
+    "question": "Pseudomonascea is easy growth on:",
+    "options": [
+      "Specific media",
+      "ordinary media",
+      "selective media",
+      "chromogen media"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 60,
+    "question": "Which of the following Gram negative rods does not ferment glucose and is oxydase positive?",
+    "options": [
+      "E.coli",
+      "P.vulgaris",
+      "P.aeruginosa",
+      "Salmonella"
+    ],
+    "answer": null,
+    "part": 2
+  },
+  {
+    "number": 61,
+    "question": "Escherichia coli that cause Shigella-like diarrhea:",
+    "options": [
+      "Enterotoxigenic (ETEC)",
+      "Enteroinvasive(EIEC)",
+      "Enteropathogenic(EPEC)",
+      "Enterohemorrhagic(EHEC)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 62,
+    "question": "Escherichia coli that cause Infantile diarrhea Salmonella-like with fever:",
+    "options": [
+      "Enterotoxigenic (ETEC)",
+      "Enteroinvasive(EIEC)",
+      "Enteropathogenic(EPEC)",
+      "Enterohemorrhagic(EHEC)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 63,
+    "question": "Escherichia coli that cause Traveller's diarrhea:",
+    "options": [
+      "Enterotoxigenic (ETEC)",
+      "Enteroinvasive(EIEC)",
+      "Enteropathogenic(EPEC)",
+      "Enterohemorrhagic(EHEC)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 64,
+    "question": "Escherichia coli that cause Hemorrhagic colitis:",
+    "options": [
+      "Enterotoxigenic (ETEC)",
+      "Enteroinvasive(EIEC)",
+      "Enteropathogenic(EPEC)",
+      "Enterohemorrhagic(EHEC)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 65,
+    "question": "Disease that affects many people at different countries is termed as:",
+    "options": [
+      "Sporadic",
+      "Pandemic",
+      "Epidemic",
+      "endemic"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 66,
+    "question": "If the vectors transmit the infection machanically they are called:",
+    "options": [
+      "biological vectors",
+      "Mechanical vectors",
+      "Biological Reservoir",
+      "Both a and c"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 67,
+    "question": "If a person can be infected by direct contact with infected tissue of another person, it is termed as:",
+    "options": [
+      "Indirect contact transmission",
+      "Attachment",
+      "Direct contact transmission",
+      "None of these"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 68,
+    "question": "The most important virulence factors are:",
+    "options": [
+      "Adhesions",
+      "Invasiveness",
+      "Toxigenicity and enzymes",
+      "All of the above"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 69,
+    "question": "The ability of pathogen to spread in the host tissues after establishing the infection is known as:",
+    "options": [
+      "Adhesions",
+      "Invasiveness",
+      "Toxigenicity",
+      "None of these"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 70,
+    "question": "Which is the following enzyme acts as a spreading factor?",
+    "options": [
+      "Hyaluronidase",
+      "Coagulase",
+      "Catalase",
+      "Dnase"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 71,
+    "question": "Septicaemia is:",
+    "options": [
+      "Bacteria in blood",
+      "Toxin in blood",
+      "Pus in blood",
+      "Multiplication of bacteria and toxins in blood"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 72,
+    "question": "Name the type of diarrhea caused by V.cholerae?",
+    "options": [
+      "Acute watery diarrhea with blood",
+      "Acute watery diarrhea resembling rice water",
+      "Mild watery diarrhea with no blood",
+      "Acute watery diarrhea with no blood"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 73,
+    "question": "Campylobacter jejuni is a microaerophilic bacteria,which of the statement is true for the culture of this bacteria?",
+    "options": [
+      "An atmosphere of increase O2(10%) with added CO2(5%)",
+      "An atmosphere of reduced O2(5%) with added CO2(10%)",
+      "An atmosphere of reduces CO2(5%) with added CO2(10%)",
+      "An atmosphere of increase CO2(10%) with added O2(5%)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 74,
+    "question": "Helicobacter pylori is associated with all of the following, Except?",
+    "options": [
+      "Malt lymphoma",
+      "Gastric Carcinoma",
+      "Peptic ulcer",
+      "Burkitt lymphoma"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 75,
+    "question": "Which one of the following virulence factors may be associated with the pathogenesis of infection caused by H.pylori?",
+    "options": [
+      "Flagella",
+      "Lipopolysaccharides",
+      "Exotoxins",
+      "Endotoxins"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 76,
+    "question": "Which one of these is not the common laboratory tests for the identification of Helicobacter pylori?",
+    "options": [
+      "Biopsy test",
+      "Urease breath test",
+      "Stool antigen test",
+      "Urine test"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 77,
+    "question": "Morphology of Helicobacter pylori is a gram negative bacilli in:",
+    "options": [
+      "Curve",
+      "Spiral",
+      "Bipolar",
+      "Coccobacilli"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 78,
+    "question": "Morphology of Vibrio cholorea is a gram negative bacilli in:",
+    "options": [
+      "Curve",
+      "Spiral",
+      "Bipolar",
+      "Coccobacilli"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 79,
+    "question": "Morphology of Escherichia coli is a gram negative bacilli with:",
+    "options": [
+      "Curve",
+      "Spiral",
+      "Bipolar",
+      "Coccobacilli"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 80,
+    "question": "Morphology of Haemophilus influenzea is a gram negative:",
+    "options": [
+      "Curve",
+      "Spiral",
+      "Bipolar",
+      "Coccobacilli"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 81,
+    "question": "One of the following is a colony morphology of Proteus sp:",
+    "options": [
+      "Swarming",
+      "Mucus",
+      "Tiny",
+      "Round 2-3mm"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 82,
+    "question": "One of the following is a colony morphology of E.coli:",
+    "options": [
+      "Swarming",
+      "Mucus",
+      "Tiny",
+      "Round 2-3mm"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 83,
+    "question": "One of the following is a colony morphology of Haemophilus sp:",
+    "options": [
+      "Swarming",
+      "Mucus",
+      "Tiny",
+      "Round 2-3mm"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 84,
+    "question": "One of the following is a colony morphology of Klebsiella sp:",
+    "options": [
+      "Swarming",
+      "Mucus",
+      "Tiny",
+      "Round 2-3mm"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 85,
+    "question": "All of the following bacteria is motile positive except:",
+    "options": [
+      "E.coli",
+      "Shigella",
+      "Shamonella",
+      "Citrobacter"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 86,
+    "question": "Morphological of Listeria Monocytogenes is:",
+    "options": [
+      "Gram + aerobic (usually anaerobic optional)",
+      "helical bacteria to turn loose, mobile, unstained by Gram stain",
+      "Spiral form very thin, with tight turns, mobile & aerobic",
+      "Gram positive (small) & Aerobic-anaerobic Optional"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 87,
+    "question": "Specific condition of Listeria Monocytogenes’s multiplication is:",
+    "options": [
+      "Multiplication at 37oC",
+      "Multiplication at 30-35oC",
+      "Multiplication at 4oC",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 88,
+    "question": "Habitat of Listeria Monocytogenes is:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Wild rodents",
+      "Pharynx and sometimes the skin",
+      "Many animal species infected with Leptospira, fresh water & sludge"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 89,
+    "question": "Listeria Monocytogenes can be transmitted to human by:",
+    "options": [
+      "Transmission transdermal & contamination by contact with water and mud",
+      "Air path or nasopharyngeal secretion & direct contact",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 90,
+    "question": "Listeria Monocytogenes’s contamination can be related to professional activity such as:",
+    "options": [
+      "Accountant & Soldier",
+      "Police man",
+      "Professor",
+      "Agriculture, employment involving contact with animals & sewage"
+    ],
+    "answer": null,
+    "part": 3
+  },
+  {
+    "number": 91,
+    "question": "Symptoms given by Listeria Monocytogenes’s infection are:",
+    "options": [
+      "Flu-like with febrile",
+      "Jaundice and kidney failure è anuria",
+      "Pseudo-membranous angina or false membranes",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 92,
+    "question": "Listeria Monocytogenes can infect cells such as:",
+    "options": [
+      "Polynucleus cell",
+      "Phagocytosis cells",
+      "Non phagocytosis cells and mononuclear cell (phagocytosis cell)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 93,
+    "question": "Sample can contain the Listeria Monocytogenes for laboratory diagnosis are:",
+    "options": [
+      "Skin sampling : pseudo membrane of necrotic skin",
+      "CSF blood & placenta",
+      "CSF blood & Urine",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 94,
+    "question": "Listeria Monocytogenes’s infection can be treated by:",
+    "options": [
+      "Penicillin Cotrimoxazole & Rifampicin",
+      "penicillin G, Erythromycin Tetracycline & Chloramphenicol",
+      "Penicillin Tetracycline & generation 3rd Cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 95,
+    "question": "Morphological of Corynebacterium is:",
+    "options": [
+      "Gram + aerobic (usually anaerobic optional)",
+      "helical bacteria to turn loose, mobile, unstained by Gram stain",
+      "Spiral form very thin, with tight turns, mobile & aerobic",
+      "Gram positive (small) & Aerobic-anaerobic Optional"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 96,
+    "question": "Disease given by Corynebacterium diphteriae is:",
+    "options": [
+      "Lyme disease",
+      "Diphtheria",
+      "Tetanus",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 97,
+    "question": "Habitat of Corynebacterium diphteriae is:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Wild rodents",
+      "Pharynx and sometimes the skin",
+      "Fresh water & sludge"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 98,
+    "question": "Transmission path of Corynebacterium diphteriae is :",
+    "options": [
+      "Transmission transdermal & contamination by contact with water and mud",
+      "Air path or nasopharyngeal secretion & direct contact",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 99,
+    "question": "Symptoms given by Corynebacterium diphteriae’s infection are:",
+    "options": [
+      "Flu-like with febrile",
+      "Jaundice and kidney failure è anuria",
+      "Pseudo-membranous angina or false membranes",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 100,
+    "question": "Corynebacterium diphteriae can be identified by using:",
+    "options": [
+      "Culture presenting gram + (0.3-0.8μm), straight or slightly curved, 2-8μm long",
+      "Culture presenting Cocci -",
+      "Culture presenting bacillus -",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 101,
+    "question": "Sample can contain the Corynebacterium diphteriae for laboratory diagnosis are:",
+    "options": [
+      "Skin sampling : pseudo membrane of necrotic skin",
+      "CSF blood & placenta",
+      "CSF blood & Urine",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 102,
+    "question": "Corynebacterium diphteriae’s infection can be treated by:",
+    "options": [
+      "Penicillin Cotrimoxazole & Rifampicin",
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 103,
+    "question": "Morphological of Borrelia is:",
+    "options": [
+      "Gram + aerobic (usually anaerobic optional)",
+      "helical bacteria to turn loose, mobile, unstained by Gram stain",
+      "Spiral form very thin, with tight turns, mobile & aerobic",
+      "Gram positive (small) & Aerobic-anaerobic Optional"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 104,
+    "question": "Disease given by Borrelia burgdorferi is:",
+    "options": [
+      "Lyme disease",
+      "Diphtheria",
+      "Tetanus",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 105,
+    "question": "Habitat of Borrelia burgdorferi is:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Wild rodents",
+      "Pharynx and sometimes the skin",
+      "Many animal species infected with Leptospira, fresh water & sludge"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 106,
+    "question": "Borrelia burgdorferi can be transmitted to human by :",
+    "options": [
+      "Air path or nasopharyngeal secretion & direct contact",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 107,
+    "question": "Characteristic erythema migrans (extending centrifugal) is symptom that can be observe in patient infected by:",
+    "options": [
+      "Borrelia burgdorferi",
+      "Leptospira interrograns",
+      "Mycoplasma Pneumoniae",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 108,
+    "question": "The most used method for Borrelia burgdorferi ‘s identification:",
+    "options": [
+      "Microscopy observe",
+      "Bacterial culture or isolate",
+      "Immunofluorescence",
+      "Serology"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 109,
+    "question": "Borrelia burgdorferi’s infection can be treated by:",
+    "options": [
+      "Penicillin Cotrimoxazole & Rifampicin",
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 110,
+    "question": "Sodoku, disease found mostly in Japan, is caused by",
+    "options": [
+      "Borrelia burgdorferi",
+      "Leptospira interrograns",
+      "Mycoplasma Pneumoniae",
+      "Spirillum minus"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 111,
+    "question": "Morphological of Leptospira is:",
+    "options": [
+      "Gram + aerobic (usually anaerobic optional)",
+      "helical bacteria to turn loose, mobile, unstained by Gram stain",
+      "Spiral form very thin, with tight turns, mobile & aerobic",
+      "Gram positive (small) & Aerobic-anaerobic Optional"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 112,
+    "question": "The pathogenic to humans of Leptospira is:",
+    "options": [
+      "Leptospira interrograns",
+      "Leptospira Icterohaemorrhagiae",
+      "Leptospira Canicola",
+      "Leptospira Pomona"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 113,
+    "question": "Leptospira can be found in:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Respiratory mucosa",
+      "Pharynx and sometimes the skin",
+      "Long persistence in fresh water and sludge (shade and 30oC place)"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 114,
+    "question": "Leptospira can be transmitted to human by :",
+    "options": [
+      "Air path or nasopharyngeal secretion & direct contact",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)",
+      "Contact with water & mud, Transdermal transmission"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 115,
+    "question": "Most severe symptoms caused by Leptospira’s infection are:",
+    "options": [
+      "Flu-like with febrile",
+      "Jaundice and kidney failure è anuria",
+      "Pseudo-membranous angina or false membranes",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 116,
+    "question": "Antibiotics that are active against Leptospira are:",
+    "options": [
+      "Penicillin Cotrimoxazole & Rifampicin",
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin & tetracycline",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 117,
+    "question": "Small Bacteria (about 0.1 microns in diameter) without wall &Non-colorable by Gram staining is:",
+    "options": [
+      "Borrelia burgdorferi",
+      "Leptospira interrograns",
+      "Mycoplasma Pneumoniae",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 118,
+    "question": "Other Pathogenic species of Mycoplasma for human is:",
+    "options": [
+      "hominis & Genitalium",
+      "Interrograns & Icterohaemorrhagiae",
+      "Canicola & Pomona",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 119,
+    "question": "Mycoplasma can be found in:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Respiratory mucosa (in humans)",
+      "Pharynx and sometimes the skin",
+      "Long persistence in fresh water and sludge (shade and 30oC place)"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 120,
+    "question": "Leptospira can be transmitted to human by:",
+    "options": [
+      "Air path",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)",
+      "Contact with water & mud, Transdermal transmission"
+    ],
+    "answer": null,
+    "part": 4
+  },
+  {
+    "number": 121,
+    "question": "Pharyngitis bronchitis & atypical pneumonia are symptoms caused by:",
+    "options": [
+      "Borrelia burgdorferi",
+      "Leptospira interrograns",
+      "Mycoplasma Pneumoniae",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 122,
+    "question": "Sample containing the Mycoplasma Pneumoniae for laboratory diagnosis is:",
+    "options": [
+      "Skin sampling: pseudo membrane of necrotic skin",
+      "CSF blood or placenta",
+      "CSF blood or Urine",
+      "pharyngeal secretion"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 123,
+    "question": "Mycoplasma Pneumoniae can be identified by using:",
+    "options": [
+      "Genetic amplification",
+      "Culture",
+      "Serology (Cold agglutinins)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 124,
+    "question": "Mycoplasma Pneumoniae’s infection can be treated by:",
+    "options": [
+      "Tetracycline, Macrolides & Fluoroquinolones",
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 125,
+    "question": "Other Pathogenic species (M. hominis & M. Genitalium) of Mycoplasma can infect :",
+    "options": [
+      "Skin & mucosa",
+      "GI tract",
+      "Genital tract, (pelvic infection & Pyenephritis)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 126,
+    "question": "Pathogenic species of Chlamydia for human are:",
+    "options": [
+      "Trachomatis, Psittacci, pneumoniae",
+      "Interrograns & Icterohaemorrhagiae",
+      "Canicola & Pomona",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 127,
+    "question": "Chlamydia Trachomatis can be found in:",
+    "options": [
+      "Wet soil, water, plants & fish (often in the GI tract of animals)",
+      "Respiratory mucosa (in humans)",
+      "Eye & genital tract",
+      "Pharynx and sometimes the skin"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 128,
+    "question": "Trachoma Cervicitis Urethritis Conjunctivitis or pneumonia are symptoms can be found in patients infected by:",
+    "options": [
+      "Leptospira interrograns",
+      "Chlamydia Trachomatis",
+      "Mycoplasma Pneumoniae",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 129,
+    "question": "Chlamydia Trachomatis can be transmitted between human by:",
+    "options": [
+      "Air & Digestive path",
+      "Ingestion of contaminated food & mother-to-child transmission",
+      "Bite of ticks (bloodsucking insects)",
+      "Sexual transmission & Childbirth (motherèchild)"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 130,
+    "question": "Methods used for the identification of Chlamydia trachomatis:",
+    "options": [
+      "Presence of inclusion in cells",
+      "Isolation in cell culture",
+      "Immunological method (enzymatic technique)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 131,
+    "question": "Chlamydia trachomatis’s infection can be treated by:",
+    "options": [
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "Tetracycline, Macrolides Rifampicine & Fluoroquinolones",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 132,
+    "question": "Symptom given by C. psittaci & C.pneumoniae :",
+    "options": [
+      "Diarrhea",
+      "Pneumonia",
+      "Jaundice",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 133,
+    "question": "Pathogenic species of Clostridium for human are:",
+    "options": [
+      "Tetani",
+      "Botulinum",
+      "perfringens",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 134,
+    "question": "Clostridium tetani  can be found in:",
+    "options": [
+      "Birds",
+      "Respiratory mucosa (in humans)",
+      "Soil & Non sterile surgical instrument",
+      "Pharynx and sometimes the skin"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 135,
+    "question": "Clostridium tetani can be transmitted to human by:",
+    "options": [
+      "Dirty wound with soil & animal bite",
+      "Air & Digestive path",
+      "Bite of ticks (bloodsucking insects)",
+      "Sexual transmission (sexual infection) & Childbirth (motherèchild)"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 136,
+    "question": "Clostridium tetani’s infection can be diagnosed by:",
+    "options": [
+      "Toxin found in CNS",
+      "Blocks transmission between inhibitory neurons and motor neurons",
+      "Using cell culture (McCoy, HeLa 229, HL, and Hep-2)",
+      "Clinical symptom (muscle spasm: masseter or Risus sardonicus)"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 137,
+    "question": "Clostridium tetani’s infection can be treated by:",
+    "options": [
+      "Chlopromazine, Diazepam & Penicillin( on wound open)",
+      "penicillin G, Erythromycin Tetracycline & chloramphenicol",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 138,
+    "question": "Clostridium tetani’s infection can be prevented by:",
+    "options": [
+      "Vaccination injection: toxin at month of 2, 4, 6 & 15 and at 4 year old",
+      "Vaccination injection: DTaP (combined vaccine for Diphteria, Tetanus & Pertussis)",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 139,
+    "question": "Anthax is disease caused by :",
+    "options": [
+      "Borrelia burgdorferi",
+      "Leptospira interrograns",
+      "Mycoplasma Pneumoniae",
+      "Bacillus anthracis"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 140,
+    "question": "Morphological of Bacillus anthracis is:",
+    "options": [
+      "Gram +, obligate aerobic rod bacterium",
+      "helical bacteria to turn loose, mobile, unstained by Gram stain",
+      "Spiral form very thin, with tight turns, mobile & aerobic",
+      "Gram positive (small) & Aerobic-anaerobic Optional"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 141,
+    "question": "Disease given by Bacillus anthracis (B. anthracis):",
+    "options": [
+      "Claucoma",
+      "Anthrax",
+      "Lyme disease",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 142,
+    "question": "Bacillus anthracis can be found in:",
+    "options": [
+      "Birds fresh water & mud",
+      "Respiratory mucosa (in humans & fish)",
+      "Soil & Non sterile surgical instrument",
+      "Herbivorous & birds"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 143,
+    "question": "Bacillus anthracis can be transmitted to human by:",
+    "options": [
+      "Dermal path",
+      "Airway path",
+      "Digestive tract path",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 144,
+    "question": "Three pathological forms given by B. anthracis’s infection are:",
+    "options": [
+      "Cutaneous anthrax symptoms",
+      "Inhalation anthrax symptoms",
+      "Gastrointestinal anthrax symptoms",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 145,
+    "question": "Fever & chills, Chest discomfort, Shortness of breath & Cough are symptoms found in patient infected by Bacillus anthracis in form of:",
+    "options": [
+      "Cutaneous anthrax",
+      "Inhalation anthrax (respiratory infection)",
+      "Gastrointestinal anthrax",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 146,
+    "question": "Bacillus anthracis can be identified by using microscope because of:",
+    "options": [
+      "its white colony type S",
+      "its capsula with gram -",
+      "Its long chain like bamboo cane",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 147,
+    "question": "Bacillus anthracis’s infection can be treated by:",
+    "options": [
+      "Chlopromazine, Diazepam & Penicillin ( on wound open)",
+      "Penicillin G, Tetracycline & Fluoroquinolone",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 148,
+    "question": "Bacillus Gram (-), strict anaerobic & non-sporulating refer to :",
+    "options": [
+      "Bacteroides",
+      "Leptospira interrograns",
+      "Mycoplasma pneumonia",
+      "Bacillus anthracis"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 149,
+    "question": "The most pathogenic species in human of Bacteroides is :",
+    "options": [
+      "Bacteroides of Melanogenic group",
+      "Bacteroides intermedus",
+      "Bacteroides Fragilis group",
+      "Bacteroides fragilis"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 150,
+    "question": "Bacteroides (in human) can be found in:",
+    "options": [
+      "Respiratory, Gastrointestinal tract & Urine",
+      "Natural cavities, mouth, intestines, vagina (flora Veillon)",
+      "Any infection of the skin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 5
+  },
+  {
+    "number": 151,
+    "question": "Transmission path of Bacteroides are:",
+    "options": [
+      "Transdermal cut & contamination by contact with water & mud",
+      "Air path or nasopharyngeal secretion & direct contact",
+      "Animal bite, Trauma & Surgical act",
+      "Bite of ticks (bloodsucking insects)"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 152,
+    "question": "Peritonitis or abscess visceral & genital infections (Chronic vaginitis Endometritis, salpingitis) are symptoms given by infection caused by:",
+    "options": [
+      "Bacteroides",
+      "Leptospira interrograns",
+      "Mycoplasma pneumonia",
+      "Bacillus anthracis"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 153,
+    "question": "Bacteroides (Fragilis group) colonies can be identified by its morphology such as:",
+    "options": [
+      "Circular, convex, white or greyish, transcluside or opaque with diameter: 1-3 mm",
+      "Circular, convex, white or greyish, transcluside or opaque with diameter: 3-5 mm",
+      "Circular, convex, Black or greyish, transcluside or opaque with diameter: 1-3 mm",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 154,
+    "question": "Bacteroides (melanogenic group) colonies can be identified by its morphology such as:",
+    "options": [
+      "Circular, convex, white or greyish, transcluside or opaque with diameter: 1-3 mm",
+      "Circular, convex, white or greyish, transcluside or opaque with diameter: 3-5 mm",
+      "Smooth or rough Surrounded by total hemolytic zone (hemolysis type β)",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 155,
+    "question": "Bacteroides’s infection can be treated by:",
+    "options": [
+      "Chlopromazine, Diazepam & Penicillin (on wound open)",
+      "Chloramphenicol, Macrolide, Limcosamide & Streptogramines",
+      "Penicillin tetracycline & generation 3rd cephalosporin",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 156,
+    "question": "Morphological of Mycobacterium tuberculosis is:",
+    "options": [
+      "Helical Gram + aerobic bacilli",
+      "Spirochete Gram – aerobic bacilli",
+      "Helical Gram – aerobic bacilli",
+      "Tubercle acid-fast bacilli"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 157,
+    "question": "Mycobacterium tuberculosis is stained by:",
+    "options": [
+      "Gram stain or Ziehl-Neelsen stain",
+      "Gram stain or Methylene blue stain",
+      "Methylene blue stain or Ziehl-Neelsen stain",
+      "Carbol fuchsin or Ziehl-Neelsen stain"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 158,
+    "question": "Mycobacterium tuberculosis is transmitted by:",
+    "options": [
+      "Via contaminated food/blood/sputum",
+      "From person to person via droplets",
+      "From insects to person via contact or bites",
+      "From person to person via blood and sputum"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 159,
+    "question": "Mode of transmission of Mycobacterium tuberculosis is:",
+    "options": [
+      "Bloodborne",
+      "Foodborne",
+      "Airborne",
+      "Waterborne"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 160,
+    "question": "Symptoms given by infection with Mycobacterium tuberculosis are:",
+    "options": [
+      "Anemia, cough, fatigue",
+      "Flu-like with febrile, anemia",
+      "Weight loss, disfiguring skin sores",
+      "Cough, weight loss, chest pain"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 161,
+    "question": "Screening method for Mycobacterium tuberculosis’s infection is:",
+    "options": [
+      "Specific enzyme-linked immunospot (ELISpot) or chest radiograph",
+      "Acid-fast bacilli (AFB) smear or sputum culture or chest radiograph",
+      "Blood culture or nucleic acid amplification tests or chest radiograph",
+      "Mantoux tuberculin skin test or IGRA blood test or chest radiograph"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 162,
+    "question": "Laboratory tests for suspected Mycobacterium tuberculosis’s infection is:",
+    "options": [
+      "Specific enzyme-linked immunospot (ELISpot)",
+      "Acid-fast bacilli (AFB) smear or sputum culture",
+      "Blood culture or nucleic acid amplification tests",
+      "Mantoux tuberculin skin test or IGRA blood test"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 163,
+    "question": "Sample containing Mycobacterium tuberculosis for laboratory diagnosis is:",
+    "options": [
+      "Blood",
+      "Sputum",
+      "Bone marrow",
+      "All of the above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 164,
+    "question": "In case of Mycobacterium tuberculosis’s infection, susceptibility testing should be performed when:",
+    "options": [
+      "Positive cultures",
+      "Positive chest radiograph",
+      "Positive Mantoux tuberculin skin test",
+      "Positive enzyme-linked immunospot (ELISpot)"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 165,
+    "question": "Susceptibility testing for Mycobacterium tuberculosis’s infection is:",
+    "options": [
+      "Agar dilution susceptibility testing",
+      "Disk diffusion susceptibility testing",
+      "Microscopic-observation drug susceptibility (MODS)",
+      "Minimum inhibitory concentration susceptibility testing (E-Test)"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 166,
+    "question": "Mycobacterium tuberculosis’s infection can be treated by:",
+    "options": [
+      "Isoniazid+Rifampin+Pyrazinamide+Ethambutol",
+      "Isoniazid+Rifampin+Streptomycin+Ethambutol+Pyrazinamide",
+      "Rifampin+Pyrazinamide+Ethambutol+Streptomycin+Isoniazid",
+      "Any of the above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 167,
+    "question": "Disease given by Mycobacterium leprae is:",
+    "options": [
+      "Tetanus",
+      "Leprosy",
+      "Diphtheria",
+      "Lyme disease"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 168,
+    "question": "Morphological of Mycobacterium leprae is:",
+    "options": [
+      "Acid-fast bacillus",
+      "Gram - aerobic cocci",
+      "Gram – anaerobic bacillus",
+      "Gram + aerobic cocci"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 169,
+    "question": "Mycobacterium leprae is stained by:",
+    "options": [
+      "Gram stain or Ziehl-Neelsen stain",
+      "Gram stain or Methylene blue stain",
+      "Ziehl-Neelsen Carbol fuchsin stain",
+      "Metylene blue stain or Ziehl-Neelsen stain"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 170,
+    "question": "The culturing of the Mycobacterium leprae is difficult to do due to the organism is:",
+    "options": [
+      "Obligate aerobic",
+      "Obligate anaerobic",
+      "Obligate intra-cellular",
+      "Obligate extra cellular"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 171,
+    "question": "Symptoms given by infection with Mycobacterium:",
+    "options": [
+      "Flu-like with febrile",
+      "Anemia and fatique",
+      "Disfiguring skin sores",
+      "All of the above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 172,
+    "question": "Infection with Mycobacterium leprae could result in the form of:",
+    "options": [
+      "Lepromatous",
+      "Tuberculoid",
+      "Both Lepromatous & Tuberculoid",
+      "Any of the above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 173,
+    "question": "Sample containing Mycobacterium leprae for laboratory diagnosis is:",
+    "options": [
+      "CSF",
+      "Blood",
+      "Sputum",
+      "Skin biopsy or smear"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 174,
+    "question": "Mycobacterium leprae ’s infecton is usually diagnosed by:",
+    "options": [
+      "Clinical diagnosis",
+      "Laboratory diagnosis",
+      "Clinical & laboratory diagnosis",
+      "Clinical or laboratory diagnosis"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 175,
+    "question": "Mycobacterium leprae ’s infecton can be treated by:",
+    "options": [
+      "Dapsone & rifampicin",
+      "Dapsone & clofazimin",
+      "Rafampicin & clofazimin",
+      "Dapsone or rifampicin or clofazimin"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 176,
+    "question": "Untreated infection with Mycobacterium leprae could result in permanent damage of:",
+    "options": [
+      "Eyes only",
+      "Skin only",
+      "Nerves only",
+      "All of the above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 177,
+    "question": "The bacterial sore throat is caused by",
+    "options": [
+      "Staphylococcus aureus",
+      "Haemophilus spp",
+      "Streptococcus pyogenes",
+      "Mycoplasma pneumonia"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 178,
+    "question": "Humans become infected with Mycobacterium tuberculosis most frequently by",
+    "options": [
+      "inhalation",
+      "Ingestion",
+      "Contact",
+      "inoculation"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 179,
+    "question": "Members of the genus Mycobacterium are",
+    "options": [
+      "gram-positive",
+      "acid-fast",
+      "Non-motile",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 180,
+    "question": "Löwentein-Jensen medium is used for culturing:",
+    "options": [
+      "Enterobacteria",
+      "Tuberculosis",
+      "Salmonella",
+      "Staphylococcus"
+    ],
+    "answer": null,
+    "part": 6
+  },
+  {
+    "number": 181,
+    "question": "Infection with Neisseria gonorrhoeae is:",
+    "options": [
+      "Homosexuals are frequently affected with it.",
+      "Sexual contact is the usual way of transmission.",
+      "Pelvic inflammatory disease occurs in 10% of the infected women.",
+      "Urethra may be affected badly."
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 182,
+    "question": "Drugs used against tuberculosis (TB) are",
+    "options": [
+      "Refampicin, Isoniazid",
+      "Pyrazinamide, Streptomycin",
+      "Both a and b",
+      "None of these"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 183,
+    "question": "In human being Streptococcus pneumoniae causes",
+    "options": [
+      "Septicaemia",
+      "Paronychia",
+      "Pneumomnia",
+      "None of these"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 184,
+    "question": "Virulence factor for Streptococcus pneumoniae",
+    "options": [
+      "Capsular polysaccharide",
+      "Specific soluble substance",
+      "Vi-antigen",
+      "Forsmann antigen"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 185,
+    "question": "Causative agent of syphilis",
+    "options": [
+      "Treponema pallidum",
+      "Treponema pertenue",
+      "Treponema carateum",
+      "Treponema endemicum"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 186,
+    "question": "Which one is the specific test for syphilis?",
+    "options": [
+      "GDRL test",
+      "Frei’s",
+      "FTA test",
+      "Wasserman test"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 187,
+    "question": "The cogulase test is used to differentiate",
+    "options": [
+      "Staphylococcus epidermidis from Neisseria meningitidis",
+      "Staphylococcus aureus from Staphylococcus epidermidis",
+      "Streptococcus pyogens from Staphylococcus aureus",
+      "Streptococcus pyogens from Enterococcus faecalis"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 188,
+    "question": "An important characteristic of Mycobacteria is that they are:",
+    "options": [
+      "Gram negative",
+      "Rapid growing (doubling time 15 minutes)",
+      "Acid fast",
+      "Alpha hemolytic"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 189,
+    "question": "Symptoms of reactivation tuberculosis include:",
+    "options": [
+      "Weight loss",
+      "Hypotension",
+      "Nausea and vomiting",
+      "Headache"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 190,
+    "question": "Rough and buff colonies on Löwenstein–Jensen medium are characteristic of",
+    "options": [
+      "Mycobacterium chelonei",
+      "Mycobacterium bovis",
+      "Mycobacterium tuberculosis",
+      "Mycobacterium fortuitum"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 191,
+    "question": "Which of the following gram-positive bacteria causes pharyngitis (sore throat)?",
+    "options": [
+      "Neisseria",
+      "Staphylococcus",
+      "Streptococcus",
+      "Mycobacterium"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 192,
+    "question": "Not true of Staphylococcus is that:",
+    "options": [
+      "It is included in the family Micrococcaceae",
+      "It is catalase positive",
+      "It is oxydase negative",
+      "It is a strict anaerobie"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 193,
+    "question": "Which of the following is not associated with manifestation of gonococci infection?",
+    "options": [
+      "Vulvovaginitis",
+      "Meningitis",
+      "Urethritis",
+      "Cervicitis"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 194,
+    "question": "Which one is the specific test for syphilis?",
+    "options": [
+      "GDRL test",
+      "Frei’s",
+      "FTA test",
+      "Wasserman test"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 195,
+    "question": "The natural reservoir of Streptococcus pyogenes is:",
+    "options": [
+      "Nasal cavity",
+      "Genetic tract",
+      "Skin",
+      "Intestinal tract"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 196,
+    "question": "Which one is not true of syphilis",
+    "options": [
+      "Caused by Treponema pallidum",
+      "Secondary eruption occurs within 4-6 weeks",
+      "Penicillin is the drug of choice for the treatment",
+      "None of the above"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 197,
+    "question": "Which of the following bacteria can cause pneumonia in man?",
+    "options": [
+      "Pneumococci",
+      "Streptococci",
+      "Staphylococci",
+      "All response above"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 198,
+    "question": "Infection with Neisseria gonorrhoeae is:",
+    "options": [
+      "Homosexuals are frequently affected with it.",
+      "Sexual contact is the usual way of transmission.",
+      "Pelvic inflammatory disease occurs in 10% of the infected women.",
+      "Urethra may be affected badly."
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 199,
+    "question": "True about Enterococcus faecalis is all, except:",
+    "options": [
+      "It is included in the Lancefield’s D group",
+      "It is a commensal of gastrointestinal tract",
+      "It is sensitive to penicillins, sulphamides and streptomycin",
+      "It causes bacterial endocarditis and bacteraemia"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 200,
+    "question": "Which of the following occurs at the first stage of Meningococcal infection?",
+    "options": [
+      "Nasopharyngeal catarrh",
+      "Cerebrospinal meningitis",
+      "Septicemia and premeningitis",
+      "Hemorrhage"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 201,
+    "question": "Capsulated Gram positive diplococci is:",
+    "options": [
+      "Gonococci",
+      "Pneumococci",
+      "Meningococci",
+      "Staphylococci"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 202,
+    "question": "Which of the following types of cells is related to delayed type tuberculin test?",
+    "options": [
+      "Monocytes",
+      "B lymphocytes",
+      "T lymphocytes",
+      "Macrophages"
+    ],
+    "answer": null,
+    "part": 7
+  },
+  {
+    "number": 203,
+    "question": "Pneumonia in AIDS patients is frequently caused by which one of the following bacteria?",
+    "options": [
+      "Streptococcus pneumoniae",
+      "Mycobacterium tuberculosis",
+      "Klebsiella pneumonia",
+      "None of these"
+    ],
+    "answer": null,
+    "part": 7
+  }
+];
+
+    const PARTS = [
+      { id: 1, label: "Part 1", range: "Q1–30", start: 1, end: 30 },
+      { id: 2, label: "Part 2", range: "Q31–60", start: 31, end: 60 },
+      { id: 3, label: "Part 3", range: "Q61–90", start: 61, end: 90 },
+      { id: 4, label: "Part 4", range: "Q91–120", start: 91, end: 120 },
+      { id: 5, label: "Part 5", range: "Q121–150", start: 121, end: 150 },
+      { id: 6, label: "Part 6", range: "Q151–180", start: 151, end: 180 },
+      { id: 7, label: "Part 7", range: "Q181–203", start: 181, end: 203 }
+    ];
+
+    const STORAGE_KEY = "qcm-bacterio-virology-y3s1-state-v1";
+
+    const state = {
+      mode: "practice",
+      currentPart: 1,
+      currentQuestionNumber: 1,
+      answers: {}
+    };
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (saved && typeof saved === "object") {
+          if (saved.mode === "practice" || saved.mode === "exam") state.mode = saved.mode;
+          if (PARTS.some(p => p.id === saved.currentPart)) state.currentPart = saved.currentPart;
+          if (Number.isInteger(saved.currentQuestionNumber)) state.currentQuestionNumber = saved.currentQuestionNumber;
+          if (saved.answers && typeof saved.answers === "object") state.answers = saved.answers;
+        }
+      } catch (err) {
+        console.warn("Failed to load saved state", err);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getCurrentPartQuestions() {
+      return QUESTIONS.filter(q => q.part === state.currentPart);
+    }
+
+    function getQuestionByNumber(number) {
+      return QUESTIONS.find(q => q.number === number);
+    }
+
+    function ensureCurrentQuestionInPart() {
+      const partQs = getCurrentPartQuestions();
+      if (!partQs.some(q => q.number === state.currentQuestionNumber)) {
+        state.currentQuestionNumber = partQs[0].number;
+      }
+    }
+
+    function answeredCount(list) {
+      return list.filter(q => state.answers[q.number]).length;
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      document.getElementById("practiceModeBtn").classList.toggle("active", mode === "practice");
+      document.getElementById("examModeBtn").classList.toggle("active", mode === "exam");
+      saveState();
+      render();
+    }
+
+    function setPart(partId) {
+      state.currentPart = partId;
+      ensureCurrentQuestionInPart();
+      saveState();
+      render();
+    }
+
+    function setCurrentQuestion(number) {
+      state.currentQuestionNumber = number;
+      saveState();
+      render();
+    }
+
+    function chooseOption(letter) {
+      state.answers[state.currentQuestionNumber] = letter;
+      saveState();
+      render();
+    }
+
+    function clearChoice() {
+      delete state.answers[state.currentQuestionNumber];
+      saveState();
+      render();
+    }
+
+    function resetCurrentPart() {
+      getCurrentPartQuestions().forEach(q => delete state.answers[q.number]);
+      saveState();
+      render();
+    }
+
+    function resetAll() {
+      state.answers = {};
+      saveState();
+      render();
+    }
+
+    function goRelative(step) {
+      const partQs = getCurrentPartQuestions();
+      const idx = partQs.findIndex(q => q.number === state.currentQuestionNumber);
+      const next = partQs[idx + step];
+      if (next) setCurrentQuestion(next.number);
+    }
+
+    function jumpToNextUnanswered() {
+      const partQs = getCurrentPartQuestions();
+      const currentIdx = partQs.findIndex(q => q.number === state.currentQuestionNumber);
+      const after = partQs.slice(currentIdx + 1).find(q => !state.answers[q.number]);
+      const any = partQs.find(q => !state.answers[q.number]);
+      if (after) return setCurrentQuestion(after.number);
+      if (any) return setCurrentQuestion(any.number);
+    }
+
+    function renderPartList() {
+      const wrap = document.getElementById("partList");
+      wrap.innerHTML = "";
+      PARTS.forEach(part => {
+        const count = QUESTIONS.filter(q => q.part === part.id).length;
+        const ans = answeredCount(QUESTIONS.filter(q => q.part === part.id));
+        const btn = document.createElement("button");
+        btn.className = "part-btn" + (part.id === state.currentPart ? " active" : "");
+        btn.innerHTML = `
+          <div>
+            <strong>${part.label}</strong>
+            <small>${part.range} · ${count} questions</small>
+          </div>
+          <strong>${ans}/${count}</strong>
+        `;
+        btn.onclick = () => setPart(part.id);
+        wrap.appendChild(btn);
+      });
+    }
+
+    function renderPalette(partQs) {
+      const grid = document.getElementById("questionGrid");
+      grid.innerHTML = "";
+      partQs.forEach(q => {
+        const div = document.createElement("button");
+        div.className = "qnum";
+        if (q.number === state.currentQuestionNumber) div.classList.add("active");
+        if (state.answers[q.number]) div.classList.add("answered");
+        div.textContent = q.number;
+        div.title = "Question " + q.number;
+        div.onclick = () => setCurrentQuestion(q.number);
+        grid.appendChild(div);
+      });
+    }
+
+    function renderQuestion() {
+      const partQs = getCurrentPartQuestions();
+      const question = getQuestionByNumber(state.currentQuestionNumber);
+      const idx = partQs.findIndex(q => q.number === question.number);
+      const selected = state.answers[question.number] || null;
+
+      document.getElementById("questionBadge").textContent = "Question " + question.number;
+      document.getElementById("questionText").textContent = question.question;
+      document.getElementById("currentIndexChip").textContent = "Question " + (idx + 1) + " of " + partQs.length;
+
+      const modeNote = document.getElementById("modeNote");
+      modeNote.textContent = state.mode === "practice"
+        ? "Practice mode: tap an option to mark your choice. Answer correctness is not shown because the uploaded PDF did not include an answer key."
+        : "Exam mode: focus on one question at a time with the same saved selections. You can still move freely and review answered / unanswered items.";
+
+      const wrap = document.getElementById("optionsWrap");
+      wrap.innerHTML = "";
+      ["A", "B", "C", "D"].forEach((letter, i) => {
+        const btn = document.createElement("button");
+        btn.className = "option" + (selected === letter ? " selected" : "");
+        btn.innerHTML = `
+          <div class="option-letter">${letter}</div>
+          <div class="option-text">${question.options[i]}</div>
+        `;
+        btn.onclick = () => chooseOption(letter);
+        wrap.appendChild(btn);
+      });
+
+      document.getElementById("prevBtn").disabled = idx === 0;
+      document.getElementById("nextBtn").disabled = idx === partQs.length - 1;
+    }
+
+    function renderStats() {
+      const allAnswered = answeredCount(QUESTIONS);
+      const pct = Math.round((allAnswered / QUESTIONS.length) * 100);
+      document.getElementById("overallFill").style.width = pct + "%";
+      document.getElementById("overallAnswered").textContent = `${allAnswered} / ${QUESTIONS.length} answered`;
+      document.getElementById("overallPercent").textContent = pct + "%";
+
+      const part = PARTS.find(p => p.id === state.currentPart);
+      const partQs = getCurrentPartQuestions();
+      const answered = answeredCount(partQs);
+      document.getElementById("currentPartChip").textContent = part.label;
+      document.getElementById("currentRangeChip").textContent = part.range;
+      document.getElementById("partAnswered").textContent = answered;
+      document.getElementById("partRemaining").textContent = partQs.length - answered;
+    }
+
+    function render() {
+      ensureCurrentQuestionInPart();
+      renderPartList();
+      renderPalette(getCurrentPartQuestions());
+      renderQuestion();
+      renderStats();
+      saveState();
+    }
+
+    function handleSearch(value) {
+      const v = value.trim();
+      if (!v) return;
+      const asNum = Number(v);
+      if (Number.isInteger(asNum) && asNum >= 1 && asNum <= QUESTIONS.length) {
+        const q = getQuestionByNumber(asNum);
+        state.currentPart = q.part;
+        state.currentQuestionNumber = q.number;
+        saveState();
+        render();
+        return;
+      }
+      const match = QUESTIONS.find(q =>
+        q.question.toLowerCase().includes(v.toLowerCase()) ||
+        q.options.some(opt => opt.toLowerCase().includes(v.toLowerCase()))
+      );
+      if (match) {
+        state.currentPart = match.part;
+        state.currentQuestionNumber = match.number;
+        saveState();
+        render();
+      }
+    }
+
+    document.getElementById("practiceModeBtn").onclick = () => setMode("practice");
+    document.getElementById("examModeBtn").onclick = () => setMode("exam");
+    document.getElementById("prevBtn").onclick = () => goRelative(-1);
+    document.getElementById("nextBtn").onclick = () => goRelative(1);
+    document.getElementById("clearBtn").onclick = clearChoice;
+    document.getElementById("jumpUnansweredBtn").onclick = jumpToNextUnanswered;
+    document.getElementById("resetPartBtn").onclick = () => {
+      if (confirm("Reset all saved choices in the current part?")) resetCurrentPart();
+    };
+    document.getElementById("resetAllBtn").onclick = () => {
+      if (confirm("Reset all saved choices in all 203 questions?")) resetAll();
+    };
+    document.getElementById("searchInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSearch(e.target.value);
+    });
+
+    loadState();
+    ensureCurrentQuestionInPart();
+    render();
+  </script>
+</body>
+</html>
